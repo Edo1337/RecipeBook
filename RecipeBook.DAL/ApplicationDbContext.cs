@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RecipeBook.DAL.Interceptors;
 using System.Reflection;
 
 namespace RecipeBook.DAL
@@ -12,6 +13,8 @@ namespace RecipeBook.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.AddInterceptors(new DateInterceptor());
+
             base.OnConfiguring(optionsBuilder);
         }
 
