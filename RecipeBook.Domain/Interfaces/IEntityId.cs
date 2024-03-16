@@ -1,4 +1,4 @@
-﻿namespace RecipeBook.Domain.Interfaces
+﻿namespace RecipeBook
 {
     public interface IEntityId<T> where T : struct
     {

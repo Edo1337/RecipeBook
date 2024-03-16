@@ -1,6 +1,6 @@
 ﻿using RecipeBook.Domain.Interfaces;
 
-namespace RecipeBook.Domain.Entity
+namespace RecipeBook
 {
     public class Recipe : IEntityId<long>, IAuditable
     {
