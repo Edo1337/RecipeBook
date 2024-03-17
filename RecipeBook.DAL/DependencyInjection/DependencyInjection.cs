@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.DAL.Interceptors;
 
-namespace RecipeBook.DAL
+namespace RecipeBook.DAL.DependencyInjection
 {
     public static class DependencyInjection
     {

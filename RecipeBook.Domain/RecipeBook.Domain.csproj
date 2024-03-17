@@ -7,10 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
     <Folder Include="Enum\" />
     <Folder Include="Settings\" />
-    <Folder Include="Result\" />
   </ItemGroup>
 
 </Project>
