@@ -14,5 +14,14 @@ namespace RecipeBook.Domain.Interfaces.Services
         /// <param name="UserId"></param>
         /// <returns></returns>
         Task<CollectionResult<RecipeDto>> GetRecipesAsync(long UserId);
+
+        /// <summary>
+        /// Получение рецепта по Id
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        Task<BaseResult<RecipeDto>> GetRecipeByIdAsync(long UserId);
+
+
     }
 }
