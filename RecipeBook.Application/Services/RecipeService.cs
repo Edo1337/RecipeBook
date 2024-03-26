@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RecipeBook.Domain.DTO;
+using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Result;
@@ -15,11 +15,14 @@ namespace RecipeBook.Application.Services
     public class RecipeService : IRecipeService
     {
         private readonly IBaseRepository<Recipe> _recipeRepository;
+        private readonly IBaseRepository<User> _userRepository;
         private readonly ILogger _logger;
 
-        public RecipeService(IBaseRepository<Recipe> recipeRepository)
+        public RecipeService(IBaseRepository<Recipe> recipeRepository, IBaseRepository<User> userRepository, ILogger logger)
         {
             _recipeRepository = recipeRepository;
+            _userRepository = userRepository;
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -38,7 +41,7 @@ namespace RecipeBook.Application.Services
                 _logger.Error(ex, ex.Message);
                 return new CollectionResult<RecipeDto>()
                 {
-                    ErrorMessage = "Внутренняя ошибка сервера", //Можно не хардкодиоть и сделать через ../Resourses/ErrorMessage.resx, но пока так
+                    ErrorMessage = "Внутренняя ошибка сервера", //Можно не хардкодиоть и сделать через ../Resourses/ErrorMessage.resx, позже исправлю
                     ErrorCode = (int)ErrorCodes.InternalServerError
                 };
             }
@@ -89,11 +92,41 @@ namespace RecipeBook.Application.Services
                 };
             }
 
-
             return new BaseResult<RecipeDto>()
             {
                 Data = recipe
             };
+        }
+
+        /// <inheritdoc />
+        public async Task<BaseResult> CreateRecipeAsync(CreateRecipeDto dto)
+        {
+            try
+            {
+                var user = await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Id == dto.UserId);
+                if (user == null)
+                {
+
+                }
+
+                var recipe = await _recipeRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Name == dto.Name);
+                if(recipe == null)
+                {
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new BaseResult<RecipeDto>()
+                {
+                    ErrorMessage = "Внутренняя ошибка сервера",
+                    ErrorCode = (int)ErrorCodes.InternalServerError
+                };
+            }
         }
     }
 }

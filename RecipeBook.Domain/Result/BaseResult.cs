@@ -8,7 +8,7 @@ namespace RecipeBook.Domain.Result
 {
     public class BaseResult
     {
-        public bool isSuccess => ErrorMessage == null;
+        public bool isSuccess => ErrorMessage == null; //Проверяем наличие ошибок
 
         public string ErrorMessage { get; set; }
 

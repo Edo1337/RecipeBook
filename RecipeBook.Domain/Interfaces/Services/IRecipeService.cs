@@ -1,4 +1,4 @@
-﻿using RecipeBook.Domain.DTO;
+﻿using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Result;
 
 namespace RecipeBook.Domain.Interfaces.Services
@@ -22,6 +22,11 @@ namespace RecipeBook.Domain.Interfaces.Services
         /// <returns></returns>
         Task<BaseResult<RecipeDto>> GetRecipeByIdAsync(long UserId);
 
-
+        /// <summary>
+        /// Создание рецепта с базовыми параметрами
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        Task<BaseResult> CreateRecipeAsync(CreateRecipeDto dto);
     }
 }
