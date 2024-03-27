@@ -17,6 +17,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\RecipeBook.Domain\RecipeBook.Domain.csproj" />
 		<ProjectReference Include="..\RecipeBook.DAL\RecipeBook.DAL.csproj" />
+		<ProjectReference Include="..\RecipeBook.Application\RecipeBook.Application.csproj" />
 	</ItemGroup>
 	
 </Project>
