@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RecipeBook.Application.Validations;
 using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Services;
+using RecipeBook.Domain.Interfaces.Validations;
 using RecipeBook.Domain.Result;
 using Serilog;
 using System;
@@ -16,12 +18,15 @@ namespace RecipeBook.Application.Services
     {
         private readonly IBaseRepository<Recipe> _recipeRepository;
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IRecipeValidator _recipeValidatior;
         private readonly ILogger _logger;
 
-        public RecipeService(IBaseRepository<Recipe> recipeRepository, IBaseRepository<User> userRepository, ILogger logger)
+        public RecipeService(IBaseRepository<Recipe> recipeRepository, IBaseRepository<User> userRepository,
+            IRecipeValidator recipeValidator, ILogger logger)
         {
             _recipeRepository = recipeRepository;
             _userRepository = userRepository;
+            _recipeValidatior = recipeValidator;
             _logger = logger;
         }
 
@@ -103,20 +108,24 @@ namespace RecipeBook.Application.Services
         {
             try
             {
-                var user = await _userRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.Id == dto.UserId);
-                if (user == null)
+                var user = await _userRepository.GetAll().FirstOrDefaultAsync(u => u.Id == dto.UserId);
+                var recipe = await _recipeRepository.GetAll().FirstOrDefaultAsync(r => r.Name == dto.Name);
+                var result = _recipeValidatior.CreateValidator(recipe, user);
+                if (!result.isSuccess) 
                 {
-
+                    return new BaseResult<RecipeDto>()
+                    {
+                        ErrorMessage = result.ErrorMessage,
+                        ErrorCode = result.ErrorCode
+                    };
                 }
-
-                var recipe = await _recipeRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.Name == dto.Name);
-                if(recipe == null)
+                recipe = new Recipe()
                 {
-
-                }
-
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    UserId = user.Id,
+                };
+                await _recipeRepository.CreateAsync(recipe);
             }
             catch (Exception ex)
             {
