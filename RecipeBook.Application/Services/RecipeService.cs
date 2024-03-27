@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RecipeBook.Application.Validations;
 using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Enum;
@@ -19,6 +20,7 @@ namespace RecipeBook.Application.Services
         private readonly IBaseRepository<Recipe> _recipeRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IRecipeValidator _recipeValidatior;
+        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public RecipeService(IBaseRepository<Recipe> recipeRepository, IBaseRepository<User> userRepository,
@@ -111,7 +113,7 @@ namespace RecipeBook.Application.Services
                 var user = await _userRepository.GetAll().FirstOrDefaultAsync(u => u.Id == dto.UserId);
                 var recipe = await _recipeRepository.GetAll().FirstOrDefaultAsync(r => r.Name == dto.Name);
                 var result = _recipeValidatior.CreateValidator(recipe, user);
-                if (!result.isSuccess) 
+                if (!result.isSuccess)
                 {
                     return new BaseResult<RecipeDto>()
                     {
@@ -126,6 +128,14 @@ namespace RecipeBook.Application.Services
                     UserId = user.Id,
                 };
                 await _recipeRepository.CreateAsync(recipe);
+                return new BaseResult<RecipeDto>()
+                {
+                    //Ручной mapping:
+                    //Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
+
+                    //Автоматический mapping:
+                    Data = _mapper.Map<RecipeDto>(recipe),
+                };
             }
             catch (Exception ex)
             {
