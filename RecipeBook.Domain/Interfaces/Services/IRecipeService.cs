@@ -27,6 +27,20 @@ namespace RecipeBook.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult> CreateRecipeAsync(CreateRecipeDto dto);
+        Task<BaseResult<RecipeDto>> CreateRecipeAsync(CreateRecipeDto dto);
+
+        /// <summary>
+        /// Удаление по ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<BaseResult<RecipeDto>> DeleteRecipeAsync(long id);
+
+        /// <summary>
+        /// Обновление рецепта
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        Task<BaseResult<RecipeDto>> UpdateRecipeAsync(UpdateRecipeDto dto);
     }
 }

@@ -106,7 +106,7 @@ namespace RecipeBook.Application.Services
         }
 
         /// <inheritdoc />
-        public async Task<BaseResult> CreateRecipeAsync(CreateRecipeDto dto)
+        public async Task<BaseResult<RecipeDto>> CreateRecipeAsync(CreateRecipeDto dto)
         {
             try
             {
@@ -135,6 +135,73 @@ namespace RecipeBook.Application.Services
 
                     //Автоматический mapping:
                     Data = _mapper.Map<RecipeDto>(recipe),
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new BaseResult<RecipeDto>()
+                {
+                    ErrorMessage = "Внутренняя ошибка сервера",
+                    ErrorCode = (int)ErrorCodes.InternalServerError
+                };
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<BaseResult<RecipeDto>> DeleteRecipeAsync(long id)
+        {
+            try
+            {
+                var recipe = await _recipeRepository.GetAll().FirstOrDefaultAsync(r => r.Id == id);
+                var result = _recipeValidatior.ValidateOnNull(recipe);
+                if (!result.isSuccess)
+                {
+                    return new BaseResult<RecipeDto>()
+                    {
+                        ErrorMessage = result.ErrorMessage,
+                        ErrorCode = result.ErrorCode
+                    };
+                }
+                await _recipeRepository.RemoveAsync(recipe);
+                return new BaseResult<RecipeDto>()
+                {
+                    Data = _mapper.Map<RecipeDto>(recipe)
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new BaseResult<RecipeDto>()
+                {
+                    ErrorMessage = "Внутренняя ошибка сервера",
+                    ErrorCode = (int)ErrorCodes.InternalServerError
+                };
+            }
+        }
+
+        public async Task<BaseResult<RecipeDto>> UpdateRecipeAsync(UpdateRecipeDto dto)
+        {
+            try
+            {
+                var recipe = _recipeRepository.GetAll().FirstOrDefault(r => r.Id == dto.Id);
+                var result = _recipeValidatior.ValidateOnNull(recipe);
+                if (!result.isSuccess)
+                {
+                    return new BaseResult<RecipeDto>()
+                    {
+                        ErrorMessage = result.ErrorMessage,
+                        ErrorCode = result.ErrorCode
+                    };
+                }
+                
+                recipe.Name = dto.Name;
+                recipe.Description = dto.Description;
+
+                await _recipeRepository.UpdateAsync(recipe);
+                return new BaseResult<RecipeDto>()
+                {
+                    Data = _mapper.Map<RecipeDto>(recipe)
                 };
             }
             catch (Exception ex)
