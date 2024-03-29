@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Application.Mapping;
 using RecipeBook.Application.Services;
+using RecipeBook.Application.Validations;
 using RecipeBook.Application.Validations.FluentValidations.Recipe;
 using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Interfaces.Services;
+using RecipeBook.Domain.Interfaces.Validations;
 
 namespace RecipeBook.Application.DependencyInjection
 {
@@ -19,6 +21,7 @@ namespace RecipeBook.Application.DependencyInjection
 
         private static void InitServices(this IServiceCollection services)
         {
+            services.AddScoped<IRecipeValidator, RecipeValidator>();
             services.AddScoped<IValidator<CreateRecipeDto>, CreateRecipeValidator>();
             services.AddScoped<IValidator<UpdateRecipeDto>, UpdateRecipeValidator>();
     
