@@ -71,38 +71,39 @@ namespace RecipeBook.Application.Services
         }
 
         /// <inheritdoc />
-        public async Task<BaseResult<RecipeDto>> GetRecipeByIdAsync(long id)
+        public Task<BaseResult<RecipeDto>> GetRecipeByIdAsync(long id)
         {
             RecipeDto? recipe;
             try
             {
-                recipe = await _recipeRepository.GetAll()
+                recipe = _recipeRepository.GetAll()
+                    .AsEnumerable()
                     .Select(x => new RecipeDto(x.Id, x.Name, x.Description, x.CreatedAt.ToLongDateString()))
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                    .FirstOrDefault(x => x.Id == id);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new BaseResult<RecipeDto>()
+                return Task.FromResult(new BaseResult<RecipeDto>()
                 {
                     ErrorMessage = "Внутренняя ошибка сервера",
                     ErrorCode = (int)ErrorCodes.InternalServerError
-                };
+                });
             }
             if (recipe == null)
             {
-                _logger.Warning($"Рецепт c {id} не найден", id);
-                return new BaseResult<RecipeDto>()
+                _logger.Warning($"Рецепт c {id} не найден");
+                return Task.FromResult(new BaseResult<RecipeDto>()
                 {
                     ErrorMessage = "Рецепт не найден",
                     ErrorCode = (int)ErrorCodes.RecipeNotFound
-                };
+                });
             }
 
-            return new BaseResult<RecipeDto>()
+            return Task.FromResult(new BaseResult<RecipeDto>()
             {
                 Data = recipe
-            };
+            });
         }
 
         /// <inheritdoc />
