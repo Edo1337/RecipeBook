@@ -17,6 +17,18 @@ namespace RecipeBook.Api.Controllers
             _recipeService = recipeService;
         }
 
+        [HttpGet("recipes/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<RecipeDto>>> GetUserRecipes(long userId)
+        {
+            var response = await _recipeService.GetRecipesAsync(userId);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -30,5 +42,45 @@ namespace RecipeBook.Api.Controllers
             }
             return BadRequest(response);
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<RecipeDto>>> Delete(long id)
+        {
+            var response = await _recipeService.DeleteRecipeAsync(id);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<RecipeDto>>> Create([FromBody] CreateRecipeDto dto)
+        {
+            var response = await _recipeService.CreateRecipeAsync(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<RecipeDto>>> Update([FromBody] UpdateRecipeDto dto)
+        {
+            var response = await _recipeService.UpdateRecipeAsync(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
     }
 }
