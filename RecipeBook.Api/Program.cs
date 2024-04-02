@@ -1,15 +1,13 @@
 using RecipeBook.DAL.DependencyInjection;
 using RecipeBook.Application.DependencyInjection;
 using Serilog;
+using RecipeBook.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwagger();
 
 //Serilog
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
@@ -25,7 +23,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(s =>
+    {
+        s.SwaggerEndpoint("/swagger/v1/swagger.json", "RecipeBook Swagger v1.0");
+        s.SwaggerEndpoint("/swagger/v2/swagger.json", "RecipeBook Swagger v2.0");
+        s.RoutePrefix = string.Empty    ;
+    });
 }
 
 app.UseHttpsRedirection();

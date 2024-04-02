@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Result;
 
 namespace RecipeBook.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [ApiVersion(1.0)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class RecipeController : ControllerBase
     {
         private readonly IRecipeService _recipeService;

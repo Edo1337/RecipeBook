@@ -5,10 +5,10 @@ namespace RecipeBook.DAL.Interceptors
 {
     internal class DateInterceptor : SaveChangesInterceptor
     {
-        public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
-        {
-            return base.SavedChangesAsync(eventData, result, cancellationToken);
-        }
+        //public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
+        //{
+        //    return base.SavedChangesAsync(eventData, result, cancellationToken);
+        //}
 
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
