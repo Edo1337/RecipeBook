@@ -15,6 +15,10 @@ namespace RecipeBook.Domain.Enum
 
         //User 10-20
         UserNotFound = 11,
+        UserAlreadyExists = 12,
+
+        // 
+        PasswordNotEqualsPasswordConfirm = 21,
 
         InternalServerError = 10,
     }

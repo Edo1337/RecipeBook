@@ -2,11 +2,17 @@ using RecipeBook.DAL.DependencyInjection;
 using RecipeBook.Application.DependencyInjection;
 using Serilog;
 using RecipeBook.Api;
+using RecipeBook.Domain.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Связываем JwtSettings.cs и appsettings.json 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
+
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddAuthenticationAndAuthhorization(builder);
 builder.Services.AddSwagger();
 
 //Serilog
