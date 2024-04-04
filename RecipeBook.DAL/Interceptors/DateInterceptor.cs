@@ -5,22 +5,17 @@ namespace RecipeBook.DAL.Interceptors
 {
     internal class DateInterceptor : SaveChangesInterceptor
     {
-        //public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
-        //{
-        //    return base.SavedChangesAsync(eventData, result, cancellationToken);
-        //}
-
-        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
         {
             var dbContext = eventData.Context;
             if (dbContext == null)
             {
-                return base.SavingChanges(eventData, result);
+                return base.SavingChangesAsync(eventData, result, cancellationToken);
             }
 
             //Хранит свойства IAuditable
             var entries = dbContext.ChangeTracker.Entries<IAuditable>()
-                .Where(e =>e.State == EntityState.Added || e.State == EntityState.Modified)
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified)
                 .ToList();
             foreach (var entry in entries)
             {
@@ -34,7 +29,7 @@ namespace RecipeBook.DAL.Interceptors
                 }
             }
 
-            return base.SavingChanges(eventData, result);
+            return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
     }
 }

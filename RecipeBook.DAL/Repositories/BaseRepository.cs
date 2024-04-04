@@ -20,37 +20,37 @@ namespace RecipeBook.DAL
             return _dbContext.Set<TEntity>();
         }
 
-        public Task<TEntity> CreateAsync(TEntity entity)
+        public async Task<TEntity> CreateAsync(TEntity entity)
         {
             if(entity == null)
                 throw new ArgumentNullException("Ошибка добавления сущности: Сущности не существует");
 
-            _dbContext.Add(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
 
-            return Task.FromResult(entity);
+            return entity;
         }
 
-        public Task<TEntity> RemoveAsync(TEntity entity)
+        public async Task<TEntity> RemoveAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Ошибка удаления сущности: Сущности не существует");
 
             _dbContext.Remove(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
-            return Task.FromResult(entity);
+            return entity;
         }
 
-        public Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Ошибка обновления сущности: Сущности не существует");
 
             _dbContext.Update(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
-            return Task.FromResult(entity);
+            return entity;
         }
     }
 }
