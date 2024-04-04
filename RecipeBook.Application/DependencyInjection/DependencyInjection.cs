@@ -26,6 +26,8 @@ namespace RecipeBook.Application.DependencyInjection
             services.AddScoped<IValidator<UpdateRecipeDto>, UpdateRecipeValidator>();
     
             services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITokenService, TokenService>();
         }
     }
 }

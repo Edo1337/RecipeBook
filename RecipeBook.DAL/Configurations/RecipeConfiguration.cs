@@ -10,7 +10,6 @@ namespace RecipeBook.DAL
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Name).HasMaxLength(128).IsRequired();
             builder.Property(x => x.Description).HasMaxLength(4096).IsRequired();
-
         }
     }
 }

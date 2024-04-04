@@ -1,4 +1,4 @@
-﻿//using RecipeBook.Domain.Interfaces;
+﻿using RecipeBook.Domain.Entity;
 
 namespace RecipeBook
 {
@@ -10,7 +10,7 @@ namespace RecipeBook
         public string Password { get; set; }
 
         public List<Recipe> Recipes { get; set; }
-
+        public UserToken UserToken { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public long? UpdatedBy { get; set; }

@@ -41,7 +41,12 @@ namespace RecipeBook.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<BaseResult<TokenDto>>> Login([FromBody] LoginUserDto dto)
         {
-
+            var response = await _authService.Login(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }
