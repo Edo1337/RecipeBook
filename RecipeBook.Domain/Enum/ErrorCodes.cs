@@ -20,6 +20,7 @@ namespace RecipeBook.Domain.Enum
         // 
         PasswordNotEqualsPasswordConfirm = 21,
         PasswordIsWrong = 22,
+        InvalidClientRequest = 23,
 
         InternalServerError = 10,
     }
