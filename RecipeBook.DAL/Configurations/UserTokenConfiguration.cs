@@ -17,7 +17,7 @@ namespace RecipeBook.DAL.Configurations
                 new UserToken()
                 {
                     Id = 1,
-                    RefreshToken = "j3j41jfds2k1kdjk1j3",
+                    RefreshToken = "j3j41jfds2k1kdjk1j3wfqwgqg32523tg",
                     RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7),
                     UserId = 1
                 }

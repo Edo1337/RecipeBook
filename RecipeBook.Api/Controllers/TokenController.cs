@@ -6,6 +6,8 @@ using RecipeBook.Domain.Result;
 
 namespace RecipeBook.Api.Controllers
 {
+    [ApiController]
+    [Route("refresh")]
     public class TokenController : Controller
     {
         private readonly ITokenService _tokenService;

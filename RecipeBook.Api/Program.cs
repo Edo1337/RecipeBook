@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
     {
         s.SwaggerEndpoint("/swagger/v1/swagger.json", "RecipeBook Swagger v1.0");
         s.SwaggerEndpoint("/swagger/v2/swagger.json", "RecipeBook Swagger v2.0");
-        s.RoutePrefix = string.Empty    ;
+        s.RoutePrefix = string.Empty;
     });
 }
 

@@ -80,6 +80,9 @@ namespace RecipeBook.Application.Services
                 {
                     userToken.RefreshToken = refreshToken;
                     userToken.RefreshTokenExpiryTime = refreshTokenExpiryTime;
+
+                    await _userTokenRepository.UpdateAsync(userToken);
+
                 }
 
                 return new BaseResult<TokenDto>()
@@ -153,7 +156,7 @@ namespace RecipeBook.Application.Services
         private string HashPassword(string password)
         {
             var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-            return BitConverter.ToString(bytes).ToLower();
+            return Convert.ToBase64String(bytes);
         }
 
         private bool IsVerifyPassword(string userPasswordHash, string userPassword)
