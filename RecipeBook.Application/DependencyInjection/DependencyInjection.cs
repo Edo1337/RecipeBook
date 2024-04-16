@@ -15,6 +15,7 @@ namespace RecipeBook.Application.DependencyInjection
         public static void AddApplication(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(RecipeMapping));
+            services.AddAutoMapper(typeof(UserMapping));
 
             InitServices(services);
         }

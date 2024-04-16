@@ -12,16 +12,16 @@ namespace RecipeBook.DAL.Configurations
             builder.Property(x => x.RefreshToken).IsRequired();
             builder.Property(x => x.RefreshTokenExpiryTime).IsRequired();
 
-            builder.HasData(new List<UserToken>()
-            {
-                new UserToken()
-                {
-                    Id = 1,
-                    RefreshToken = "j3j41jfds2k1kdjk1j3wfqwgqg32523tg",
-                    RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7),
-                    UserId = 1
-                }
-            });
+            //builder.HasData(new List<UserToken>()
+            //{
+            //    new UserToken()
+            //    {
+            //        Id = 1,
+            //        RefreshToken = "j3j41jfds2k1kdjk1j3wfqwgqg32523tg",
+            //        RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7),
+            //        UserId = 1
+            //    }
+            //});
         }
     }
 }

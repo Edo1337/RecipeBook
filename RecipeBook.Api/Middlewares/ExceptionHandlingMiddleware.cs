@@ -1,4 +1,8 @@
-﻿namespace RecipeBook.Api.Middlewares
+﻿using RecipeBook.Domain.Result;
+using System.Net;
+using ILogger = Serilog.ILogger;
+
+namespace RecipeBook.Api.Middlewares
 {
     public class ExceptionHandlingMiddleware
     {
@@ -17,15 +21,26 @@
             {
                 await _next(httpContext);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                await HandleExceptionAsync(httpContext, ex);
+                await HandleExceptionAsync(httpContext, exception);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
-            _logger.LogError(ex, ex.Message); //Не уверен что верно сделал туточки
+            _logger.Error(exception, exception.Message); //Не уверен что верно сделал туточки
+
+            var errorMessage = exception.Message;
+            var response = exception switch
+            {
+                UnauthorizedAccessException _ => new BaseResult() { ErrorMessage = errorMessage, ErrorCode = (int)HttpStatusCode.Unauthorized },
+                _ => new BaseResult() { ErrorMessage = "Internal server error", ErrorCode = (int)HttpStatusCode.InternalServerError }
+            };
+
+            httpContext.Response.ContentType = "application/json";
+            httpContext.Response.StatusCode = (int)response.ErrorCode;
+            await httpContext.Response.WriteAsJsonAsync(response);
         }
     }
 }

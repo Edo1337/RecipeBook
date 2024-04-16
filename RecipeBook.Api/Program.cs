@@ -3,6 +3,7 @@ using RecipeBook.Application.DependencyInjection;
 using Serilog;
 using RecipeBook.Api;
 using RecipeBook.Domain.Settings;
+using RecipeBook.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddApplication();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -36,6 +39,9 @@ if (app.Environment.IsDevelopment())
         s.RoutePrefix = string.Empty;
     });
 }
+
+//Cors
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
 

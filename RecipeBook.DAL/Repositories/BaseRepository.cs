@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RecipeBook.DAL
+﻿namespace RecipeBook.DAL
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
