@@ -10,6 +10,7 @@ namespace RecipeBook
         public string Password { get; set; }
 
         public List<Recipe> Recipes { get; set; }
+        public List<Role> Roles { get; set; }
         public UserToken UserToken { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
