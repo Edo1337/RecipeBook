@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace RecipeBook.DAL
 {
-    internal class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
+    public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
     {
         public void Configure(EntityTypeBuilder<Recipe> builder)
         {

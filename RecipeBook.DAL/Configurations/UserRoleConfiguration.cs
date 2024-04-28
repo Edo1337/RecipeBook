@@ -8,14 +8,14 @@ namespace RecipeBook.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            builder.HasData(new List<UserRole>()
-            {
-                new UserRole()
-                {
-                    UserId = 1,
-                    RoleId = 2,
-                }
-            });
+            //builder.HasData(new List<UserRole>()
+            //{
+            //    new UserRole()
+            //    {
+            //        UserId = 1,
+            //        RoleId = 2,
+            //    }
+            //});
         }
     }
 }
