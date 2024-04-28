@@ -24,6 +24,7 @@ namespace RecipeBook.DAL.DependencyInjection
         private static void InitRepositories(this IServiceCollection services)
         {
             services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
+            services.AddScoped<IBaseRepository<Role>, BaseRepository<Role>>();
             services.AddScoped<IBaseRepository<UserToken>, BaseRepository<UserToken>>();
             services.AddScoped<IBaseRepository<Recipe>, BaseRepository<Recipe>>();
         }
