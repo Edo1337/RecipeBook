@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RecipeBook.Application.Mapping;
 using RecipeBook.Domain.Settings;
 using Serilog;
 using System.Reflection;

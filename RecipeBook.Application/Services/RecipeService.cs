@@ -24,11 +24,12 @@ namespace RecipeBook.Application.Services
         private readonly ILogger _logger;
 
         public RecipeService(IBaseRepository<Recipe> recipeRepository, IBaseRepository<User> userRepository,
-            IRecipeValidator recipeValidator, ILogger logger)
+            IRecipeValidator recipeValidator, IMapper mapper, ILogger logger)
         {
             _recipeRepository = recipeRepository;
             _userRepository = userRepository;
             _recipeValidatior = recipeValidator;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -132,10 +133,10 @@ namespace RecipeBook.Application.Services
                 return new BaseResult<RecipeDto>()
                 {
                     //Ручной mapping:
-                    //Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
+                    Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
 
                     //Автоматический mapping:
-                    Data = _mapper.Map<RecipeDto>(recipe),
+                    //Data = _mapper.Map<RecipeDto>(recipe),
                 };
             }
             catch (Exception ex)
@@ -167,7 +168,11 @@ namespace RecipeBook.Application.Services
                 await _recipeRepository.RemoveAsync(recipe);
                 return new BaseResult<RecipeDto>()
                 {
-                    Data = _mapper.Map<RecipeDto>(recipe)
+                    //Ручной mapping:
+                    Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
+
+                    //Автоматический mapping:
+                    //Data = _mapper.Map<RecipeDto>(recipe),
                 };
             }
             catch (Exception ex)
@@ -195,14 +200,18 @@ namespace RecipeBook.Application.Services
                         ErrorCode = result.ErrorCode
                     };
                 }
-                
+
                 recipe.Name = dto.Name;
                 recipe.Description = dto.Description;
 
                 await _recipeRepository.UpdateAsync(recipe);
                 return new BaseResult<RecipeDto>()
                 {
-                    Data = _mapper.Map<RecipeDto>(recipe)
+                    //Ручной mapping:
+                    Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
+
+                    //Автоматический mapping:
+                    //Data = _mapper.Map<RecipeDto>(recipe),
                 };
             }
             catch (Exception ex)
