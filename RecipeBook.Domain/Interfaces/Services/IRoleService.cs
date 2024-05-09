@@ -28,6 +28,6 @@ namespace RecipeBook.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<Role>> UpdateRoleAsync(RoleDto dto);
+        Task<BaseResult<Role>> UpdateRoleAsync(UpdateRoleDto dto);
     }
 }

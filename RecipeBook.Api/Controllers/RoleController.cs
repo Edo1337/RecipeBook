@@ -28,7 +28,7 @@ namespace RecipeBook.Api.Controllers
         ///     
         ///     POST
         ///     {
-        ///         "Name": "User",
+        ///         "name": "string",
         ///     }
         ///     
         /// </remarks>
@@ -94,7 +94,7 @@ namespace RecipeBook.Api.Controllers
         [HttpPut(template: "{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<Role>>> Update([FromBody] RoleDto dto)
+        public async Task<ActionResult<BaseResult<Role>>> Update([FromBody] UpdateRoleDto dto)
         {
             var response = await _roleService.UpdateRoleAsync(dto);
             if (response.isSuccess)

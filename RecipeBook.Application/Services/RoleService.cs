@@ -58,7 +58,7 @@ namespace RecipeBook.Application.Services
             };
         }
 
-        public async Task<BaseResult<Role>> UpdateRoleAsync(RoleDto dto)
+        public async Task<BaseResult<Role>> UpdateRoleAsync(UpdateRoleDto dto)
         {
             var role = await _roleRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
             if (role == null)

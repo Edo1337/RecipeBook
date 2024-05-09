@@ -7,7 +7,7 @@ using RecipeBook.Domain.Result;
 
 namespace RecipeBook.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion(1.0)]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -113,7 +113,7 @@ namespace RecipeBook.Api.Controllers
         ///     
         ///     POST
         ///     {
-        ///         name": "string",
+        ///         "name": "string",
         ///         "description": "string",
         ///         "userId": 0
         ///     }
