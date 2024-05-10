@@ -1,4 +1,5 @@
-﻿using RecipeBook.Domain.Result;
+﻿using RecipeBook.Domain.Entity;
+using RecipeBook.Domain.Result;
 using System;
 using System.Collections.Generic;
 using System.Linq;

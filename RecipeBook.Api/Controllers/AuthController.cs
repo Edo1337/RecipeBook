@@ -8,7 +8,7 @@ using RecipeBook.Domain.Result;
 namespace RecipeBook.Api.Controllers
 {
     [ApiController]
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
 

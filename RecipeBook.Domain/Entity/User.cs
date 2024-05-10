@@ -1,6 +1,4 @@
-﻿using RecipeBook.Domain.Entity;
-
-namespace RecipeBook
+﻿namespace RecipeBook.Domain.Entity
 {
     public class User : IEntityId<long>, IAuditable
     {

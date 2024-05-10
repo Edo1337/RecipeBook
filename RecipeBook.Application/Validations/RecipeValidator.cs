@@ -1,4 +1,5 @@
-﻿using RecipeBook.Domain.Enum;
+﻿using RecipeBook.Domain.Entity;
+using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Validations;
 using RecipeBook.Domain.Result;
 using System;

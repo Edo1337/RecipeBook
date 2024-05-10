@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RecipeBook.Domain.Dto.Recipe;
+using RecipeBook.Domain.Entity;
 
 namespace RecipeBook.Application.Mapping
 {
@@ -7,8 +8,7 @@ namespace RecipeBook.Application.Mapping
     {
         public RecipeMapping()
         {
-            CreateMap<Recipe, RecipeDto>()
-                .ReverseMap();
+            CreateMap<Recipe, RecipeDto>().ReverseMap();
         }
     }
 }

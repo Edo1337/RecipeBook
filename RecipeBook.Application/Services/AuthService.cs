@@ -103,8 +103,6 @@ namespace RecipeBook.Application.Services
                     ErrorCode = (int)ErrorCodes.InternalServerError
                 };
             }
-
-            return null;
         }
 
         public async Task<BaseResult<UserDto>> Register(RegisterUserDto dto)

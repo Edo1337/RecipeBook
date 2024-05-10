@@ -26,6 +26,7 @@ namespace RecipeBook.Domain.Enum
         //Role 31-40
         RoleAlreadyExists = 31,
         RoleNotFound = 32,
+        UserAlreadyExistsThisRole = 33,
 
         InternalServerError = 10,
     }

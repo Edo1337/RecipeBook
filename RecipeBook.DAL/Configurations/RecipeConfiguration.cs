@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using RecipeBook.Domain.Entity;
 
 namespace RecipeBook.DAL
 {

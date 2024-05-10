@@ -16,6 +16,7 @@ namespace RecipeBook.Application.DependencyInjection
         {
             services.AddAutoMapper(typeof(RecipeMapping));
             services.AddAutoMapper(typeof(UserMapping));
+            services.AddAutoMapper(typeof(RoleMapping));
 
             InitServices(services);
         }

@@ -1,4 +1,4 @@
-﻿namespace RecipeBook
+﻿namespace RecipeBook.Domain.Entity
 {
     public class Recipe : IEntityId<long>, IAuditable
     {

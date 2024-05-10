@@ -2,16 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Application.Validations;
 using RecipeBook.Domain.Dto.Recipe;
+using RecipeBook.Domain.Entity;
 using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Interfaces.Validations;
 using RecipeBook.Domain.Result;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RecipeBook.Application.Services
 {
@@ -123,6 +119,7 @@ namespace RecipeBook.Application.Services
                         ErrorCode = result.ErrorCode
                     };
                 }
+
                 recipe = new Recipe()
                 {
                     Name = dto.Name,
@@ -136,7 +133,7 @@ namespace RecipeBook.Application.Services
                     Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
 
                     //Автоматический mapping:
-                    //Data = _mapper.Map<RecipeDto>(recipe),
+                    //Data = _mapper.Map<RecipeDto>(recipe)
                 };
             }
             catch (Exception ex)

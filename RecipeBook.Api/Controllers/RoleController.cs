@@ -10,7 +10,7 @@ namespace RecipeBook.Api.Controllers
     [Consumes(MediaTypeNames.Application.Json)]
     [ApiController]
     [Route("api/[controller]")]
-    public class RoleController : Controller
+    public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
 
@@ -37,9 +37,38 @@ namespace RecipeBook.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<Role>>> Create([FromBody] RoleDto dto)
+        public async Task<ActionResult<BaseResult<Role>>> Create([FromBody] CreateRoleDto dto)
         {
             var response = await _roleService.CreateRoleAsync(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// Обновление роли
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <remarks>
+        /// Request to create recipe:
+        ///     
+        ///     PUT
+        ///     {
+        ///         "id": 1
+        ///         "name": "Admin",
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Роль была обновлена</response>
+        /// <response code="400">Роль не была обновлена</response>
+        [HttpPut(template: "{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<Role>>> Update([FromBody] RoleDto dto)
+        {
+            var response = await _roleService.UpdateRoleAsync(dto);
             if (response.isSuccess)
             {
                 return Ok(response);
@@ -68,35 +97,6 @@ namespace RecipeBook.Api.Controllers
         public async Task<ActionResult<BaseResult<Role>>> Delete(long id)
         {
             var response = await _roleService.DeleteRoleAsync(id);
-            if (response.isSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
-        }
-
-        /// <summary>
-        /// Обновление роли
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <remarks>
-        /// Request to create recipe:
-        ///     
-        ///     PUT
-        ///     {
-        ///         "id": 1
-        ///         "name": "Admin",
-        ///     }
-        ///     
-        /// </remarks>
-        /// <response code="200">Роль была обновлена</response>
-        /// <response code="400">Роль не была обновлена</response>
-        [HttpPut(template: "{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<Role>>> Update([FromBody] UpdateRoleDto dto)
-        {
-            var response = await _roleService.UpdateRoleAsync(dto);
             if (response.isSuccess)
             {
                 return Ok(response);

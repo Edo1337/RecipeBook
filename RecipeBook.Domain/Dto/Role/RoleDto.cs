@@ -1,4 +1,4 @@
 ﻿namespace RecipeBook.Domain.Dto.Role
 {
-    public record RoleDto(string Name);
+    public record RoleDto(int Id, string Name);
 }
