@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.DAL.Interceptors;
+using RecipeBook.DAL.Repositories;
 using RecipeBook.Domain.Entity;
+using RecipeBook.Domain.Interfaces.Databases;
 
 namespace RecipeBook.DAL.DependencyInjection
 {
@@ -23,6 +25,7 @@ namespace RecipeBook.DAL.DependencyInjection
 
         private static void InitRepositories(this IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
             services.AddScoped<IBaseRepository<Role>, BaseRepository<Role>>();
             services.AddScoped<IBaseRepository<UserRole>, BaseRepository<UserRole>>();

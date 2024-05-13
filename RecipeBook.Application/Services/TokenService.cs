@@ -95,7 +95,8 @@ namespace RecipeBook.Application.Services
             var newRefreshToken = GenerateRefreshToken();
 
             user.UserToken.RefreshToken = newRefreshToken;
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
 
             return new BaseResult<TokenDto>
             {

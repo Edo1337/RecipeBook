@@ -1,4 +1,6 @@
-﻿namespace RecipeBook.DAL
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace RecipeBook.DAL
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
@@ -25,26 +27,27 @@
             return entity;
         }
 
-        public async Task<TEntity> RemoveAsync(TEntity entity)
+        public void Remove(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Ошибка удаления сущности: Сущности не существует");
 
             _dbContext.Remove(entity);
-            await _dbContext.SaveChangesAsync();
-
-            return entity;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public TEntity Update(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Ошибка обновления сущности: Сущности не существует");
 
             _dbContext.Update(entity);
-            await _dbContext.SaveChangesAsync();
 
             return entity;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

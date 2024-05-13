@@ -6,6 +6,7 @@ using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Dto.User;
 using RecipeBook.Domain.Entity;
 using RecipeBook.Domain.Enum;
+using RecipeBook.Domain.Interfaces.Databases;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Result;
 using Serilog;
@@ -18,24 +19,25 @@ namespace RecipeBook.Application.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<UserToken> _userTokenRepository;
         private readonly IBaseRepository<Role> _roleRepository;
-        private readonly IBaseRepository<UserRole> _userRoleRepository;
         private readonly ITokenService _tokenService;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
         public AuthService(IBaseRepository<User> userRepository, ILogger logger, ITokenService tokenService,
-            IBaseRepository<UserToken> userTokenRepository, IMapper mapper, IBaseRepository<Role> roleRepository, IBaseRepository<UserRole> userRoleRepository)
+            IBaseRepository<UserToken> userTokenRepository, IMapper mapper, IBaseRepository<Role> roleRepository,
+            IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _userTokenRepository = userTokenRepository;
             _roleRepository = roleRepository;
-            _userRoleRepository = userRoleRepository;
             _tokenService = tokenService;
             _logger = logger;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BaseResult<TokenDto>> Login(LoginUserDto dto)
@@ -86,7 +88,8 @@ namespace RecipeBook.Application.Services
                     userToken.RefreshToken = refreshToken;
                     userToken.RefreshTokenExpiryTime = refreshTokenExpiryTime;
 
-                    await _userTokenRepository.UpdateAsync(userToken);
+                    _userTokenRepository.Update(userToken);
+                    await _userTokenRepository.SaveChangesAsync();
                 }
 
                 return new BaseResult<TokenDto>()
@@ -133,35 +136,50 @@ namespace RecipeBook.Application.Services
                 }
                 var hashUserPassword = HashPassword(dto.Password);
 
-                user = new User()
+                using (var transaction = await _unitOfWork.BeginTransactionAsync())
                 {
-                    Login = dto.Login,
-                    Password = hashUserPassword
-                };
-                await _userRepository.CreateAsync(user);
+                    try
+                    {
+                        user = new User()
+                        {
+                            Login = dto.Login,
+                            Password = hashUserPassword
+                        };
+                        await _unitOfWork.Users.CreateAsync(user);
 
-                var role = _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Name == "User");
-                if (role == null)
-                {
+                        await _unitOfWork.SaveChangesAsync();
+
+                        var role = _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Name == nameof(Roles.User));
+                        if (role == null)
+                        {
+                            return new BaseResult<UserDto>()
+                            {
+                                ErrorMessage = "Роль не найдена",
+                                ErrorCode = (int)ErrorCodes.RoleNotFound
+                            };
+                        }
+
+                        UserRole userRole = new UserRole()
+                        {
+                            UserId = user.Id,
+                            RoleId = role.Id
+                        };
+                        await _unitOfWork.UserRoles.CreateAsync(userRole);
+
+                        await _unitOfWork.SaveChangesAsync();
+
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                    }
+
                     return new BaseResult<UserDto>()
                     {
-                        ErrorMessage = "Роль не найдена",
-                        ErrorCode = (int)ErrorCodes.RoleNotFound
+                        Data = _mapper.Map<UserDto>(user)
                     };
                 }
-
-                UserRole userRole = new UserRole()
-                {
-                    UserId = user.Id,
-                    RoleId = role.Id
-                };
-
-                await _userRoleRepository.CreateAsync(userRole);
-
-                return new BaseResult<UserDto>()
-                {
-                    Data = _mapper.Map<UserDto>(user)
-                };
             }
             catch (Exception ex)
             {

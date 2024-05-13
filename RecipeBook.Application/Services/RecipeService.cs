@@ -162,7 +162,9 @@ namespace RecipeBook.Application.Services
                         ErrorCode = result.ErrorCode
                     };
                 }
-                await _recipeRepository.RemoveAsync(recipe);
+                _recipeRepository.Remove(recipe);
+                await _recipeRepository.SaveChangesAsync();
+
                 return new BaseResult<RecipeDto>()
                 {
                     //Ручной mapping:
@@ -201,11 +203,13 @@ namespace RecipeBook.Application.Services
                 recipe.Name = dto.Name;
                 recipe.Description = dto.Description;
 
-                await _recipeRepository.UpdateAsync(recipe);
+                var updatedRecipe = _recipeRepository.Update(recipe);
+                await _recipeRepository.SaveChangesAsync();
+
                 return new BaseResult<RecipeDto>()
                 {
                     //Ручной mapping:
-                    Data = new RecipeDto(recipe.Id, recipe.Name, recipe.Description, recipe.CreatedAt.ToLongDateString())
+                    Data = new RecipeDto(updatedRecipe.Id, updatedRecipe.Name, updatedRecipe.Description, updatedRecipe.CreatedAt.ToLongDateString())
 
                     //Автоматический mapping:
                     //Data = _mapper.Map<RecipeDto>(recipe),

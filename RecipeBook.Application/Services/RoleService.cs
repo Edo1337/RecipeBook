@@ -55,7 +55,9 @@ namespace RecipeBook.Application.Services
                     ErrorCode = (int)ErrorCodes.RoleNotFound,
                 };
             }
-            await _roleRepository.RemoveAsync(role);
+            _roleRepository.Remove(role);
+            await _roleRepository.SaveChangesAsync();
+
             return new BaseResult<RoleDto>
             {
                 Data = _mapper.Map<RoleDto>(role)
@@ -74,10 +76,12 @@ namespace RecipeBook.Application.Services
                 };
             }
             role.Name = dto.Name;
-            await _roleRepository.UpdateAsync(role);
+            var updatedRole = _roleRepository.Update(role);
+            await _roleRepository.SaveChangesAsync();
+
             return new BaseResult<RoleDto>
             {
-                Data = _mapper.Map<RoleDto>(role)
+                Data = _mapper.Map<RoleDto>(updatedRole)
             };
         }
 
