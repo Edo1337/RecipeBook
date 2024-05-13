@@ -51,7 +51,7 @@ namespace RecipeBook.Application.Services
             {
                 return new BaseResult<RoleDto>
                 {
-                    ErrorMessage = "Роль уже существует",
+                    ErrorMessage = "Такой роли не существует",
                     ErrorCode = (int)ErrorCodes.RoleNotFound,
                 };
             }
@@ -64,7 +64,7 @@ namespace RecipeBook.Application.Services
 
         public async Task<BaseResult<RoleDto>> UpdateRoleAsync(RoleDto dto)
         {
-            var role = await _roleRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var role = await _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Id == dto.Id);
             if (role == null)
             {
                 return new BaseResult<RoleDto>
@@ -81,7 +81,8 @@ namespace RecipeBook.Application.Services
             };
         }
 
-        public async Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto)
+        //можно 2 и более ролей добавлять для одного и того же пользователя (надо бы исправить позже обязательно!!!)
+        public async Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto) 
         {
             var user = await _userRepository.GetAll()
                 .Include(u => u.Roles)
@@ -95,7 +96,7 @@ namespace RecipeBook.Application.Services
                 };
             }
 
-            var roles = user.Roles.Select(x => x.Name).ToArray();
+            var roles = user.Roles.Select(r => r.Name).ToArray();
             if (!roles.Any(x => x == dto.RoleName))
             {
                 var role = await _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Name == dto.RoleName);
@@ -110,8 +111,8 @@ namespace RecipeBook.Application.Services
 
                 UserRole userRole = new UserRole()
                 {
-                    RoleId = role.Id,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    RoleId = role.Id
                 };
                 await _userRoleRepository.CreateAsync(userRole);
 

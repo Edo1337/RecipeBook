@@ -60,6 +60,7 @@ namespace RecipeBook.Application.Services
                 ValidIssuer = _issuer,
             };
             var tokenHandler = new JwtSecurityTokenHandler();
+
             var claimsPrincipal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
             if (securityToken is not JwtSecurityToken jwtSecurityToken || 
                     !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
@@ -74,7 +75,7 @@ namespace RecipeBook.Application.Services
             var accessToken = dto.AccessToken;
             var refreshToken = dto.RefreshToken;
 
-            var claimsPrincipal = GetPrincipalFromExpiredToken(refreshToken);
+            var claimsPrincipal = GetPrincipalFromExpiredToken(accessToken);
             var userName = claimsPrincipal.Identity?.Name;
 
             var user = await _userRepository.GetAll()

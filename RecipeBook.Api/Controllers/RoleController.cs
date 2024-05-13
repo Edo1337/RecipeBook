@@ -103,5 +103,34 @@ namespace RecipeBook.Api.Controllers
             }
             return BadRequest(response);
         }
+
+        /// <summary>
+        /// Добавление роли пользователю
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <remarks>
+        /// Request to add role for user:
+        ///     
+        ///     POST
+        ///     {
+        ///         "login": "string",
+        ///         "roleName": "string",
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Роль была назначена</response>
+        /// <response code="400">Роль не была назначена</response>
+        [HttpPost("addRole")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<Role>>> AddRoleForUser([FromBody] UserRoleDto dto)
+        {
+            var response = await _roleService.AddRoleForUserAsync(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }
 }
