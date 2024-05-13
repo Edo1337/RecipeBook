@@ -92,9 +92,9 @@ namespace RecipeBook.Application.Services
             }
 
             var newAccessToken = GenerateAccessToken(claimsPrincipal.Claims);
-            var newRefreshRoken = GenerateRefreshToken();
+            var newRefreshToken = GenerateRefreshToken();
 
-            user.UserToken.RefreshToken = newRefreshRoken;
+            user.UserToken.RefreshToken = newRefreshToken;
             await _userRepository.UpdateAsync(user);
 
             return new BaseResult<TokenDto>
