@@ -136,5 +136,50 @@ namespace RecipeBook.Application.Services
                 ErrorCode = (int)ErrorCodes.UserAlreadyExistsThisRole,
             };
         }
+
+        public async Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(UserRoleDto dto)
+        {
+            var user = await _userRepository.GetAll()
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.Login == dto.Login);
+            if (user == null)
+            {
+                return new BaseResult<UserRoleDto>
+                {
+                    ErrorMessage = "Пользователь не найден",
+                    ErrorCode = (int)ErrorCodes.UserNotFound,
+                };
+            }
+
+            var role = user.Roles.FirstOrDefault(r => r.Name == dto.RoleName);
+            if (role == null)
+            {
+                return new BaseResult<UserRoleDto>
+                {
+                    ErrorMessage = "Роль не найдена",
+                    ErrorCode = (int)ErrorCodes.RoleNotFound,
+                };
+            }
+
+            var userRole = await _userRoleRepository.GetAll()
+                .Where(ur => ur.RoleId == role.Id)
+                .FirstOrDefaultAsync(ur => ur.UserId == user.Id);
+            _userRoleRepository.Remove(userRole);
+            await _userRoleRepository.SaveChangesAsync();
+
+            return new BaseResult<UserRoleDto>()
+            {
+                Data = new UserRoleDto()
+                {
+                    Login = user.Login,
+                    RoleName = role.Name
+                }
+            };
+        }
+
+        public Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UserRoleDto dto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

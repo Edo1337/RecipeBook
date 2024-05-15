@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Domain.Dto.Role;
 using RecipeBook.Domain.Entity;
+using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Result;
 using System.Net.Mime;
@@ -9,6 +11,7 @@ namespace RecipeBook.Api.Controllers
 {
     [Consumes(MediaTypeNames.Application.Json)]
     [ApiController]
+    [Authorize(Roles = nameof(Roles.Admin))]
     [Route("api/[controller]")]
     public class RoleController : ControllerBase
     {
@@ -126,6 +129,35 @@ namespace RecipeBook.Api.Controllers
         public async Task<ActionResult<BaseResult<Role>>> AddRoleForUser([FromBody] UserRoleDto dto)
         {
             var response = await _roleService.AddRoleForUserAsync(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// Удаление роли пользователя
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <remarks>
+        /// Request to add role for user:
+        ///     
+        ///     POST
+        ///     {
+        ///         "login": "string",
+        ///         "roleName": "string",
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Роль была назначена</response>
+        /// <response code="400">Роль не была назначена</response>
+        [HttpDelete("deleteRole")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<Role>>> DeleteRoleForUser([FromBody] UserRoleDto dto)
+        {
+            var response = await _roleService.DeleteRoleForUserAsync(dto);
             if (response.isSuccess)
             {
                 return Ok(response);
