@@ -7,6 +7,8 @@ using RecipeBook.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Связываем RabbitMqSettings.cs и appsettings.json 
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection(nameof(RabbitMqSettings)));
 //Связываем JwtSettings.cs и appsettings.json 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
 

@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeBook.Application", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeBook.Producer", "RecipeBook.Producer\RecipeBook.Producer.csproj", "{6A8A965A-64DC-4DA8-8D7A-500C97079648}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeBook.Consumer", "RecipeBook.Consumer\RecipeBook.Consumer.csproj", "{F75E6E82-8824-401B-99D6-841412B9AF5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{6A8A965A-64DC-4DA8-8D7A-500C97079648}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A8A965A-64DC-4DA8-8D7A-500C97079648}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A8A965A-64DC-4DA8-8D7A-500C97079648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F75E6E82-8824-401B-99D6-841412B9AF5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F75E6E82-8824-401B-99D6-841412B9AF5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F75E6E82-8824-401B-99D6-841412B9AF5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F75E6E82-8824-401B-99D6-841412B9AF5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{C727DF35-C9F4-4E27-A3E5-552ED969B761} = {41AB99CA-3E48-4661-BC5D-D2FD98A579E4}
 		{30612776-02DE-45DD-8F2D-05C62E14E58D} = {26D62590-01E7-4F7E-B5AA-9A1596A608F8}
 		{6A8A965A-64DC-4DA8-8D7A-500C97079648} = {41AB99CA-3E48-4661-BC5D-D2FD98A579E4}
+		{F75E6E82-8824-401B-99D6-841412B9AF5C} = {41AB99CA-3E48-4661-BC5D-D2FD98A579E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B600169-AE3C-4214-8F7C-3991E4EF8CAF}
