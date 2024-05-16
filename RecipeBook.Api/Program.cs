@@ -1,5 +1,7 @@
 using RecipeBook.DAL.DependencyInjection;
 using RecipeBook.Application.DependencyInjection;
+using RecipeBook.Producer.DependencyInjection;
+using RecipeBook.Consumer.DependencyInjection;
 using Serilog;
 using RecipeBook.Api;
 using RecipeBook.Domain.Settings;
@@ -21,10 +23,12 @@ builder.Services.AddSwagger();
 //Serilog
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
-//Dependency Injection for DAL
+//Dependency Injection
 builder.Services.AddDataAccessLayer(builder.Configuration);
-
 builder.Services.AddApplication();
+builder.Services.AddProducer();
+builder.Services.AddConsumer();
+
 
 var app = builder.Build();
 

@@ -22,6 +22,8 @@
 		<ProjectReference Include="..\RecipeBook.Domain\RecipeBook.Domain.csproj" />
 		<ProjectReference Include="..\RecipeBook.DAL\RecipeBook.DAL.csproj" />
 		<ProjectReference Include="..\RecipeBook.Application\RecipeBook.Application.csproj" />
+		<ProjectReference Include="..\RecipeBook.Producer\RecipeBook.Producer.csproj" />
+		<ProjectReference Include="..\RecipeBook.Consumer\RecipeBook.Consumer.csproj" />
 	</ItemGroup>
 	
 </Project>
