@@ -132,10 +132,9 @@ namespace RecipeBook.Application.Services
                         Password = hashUserPassword
                     };
                     await _unitOfWork.Users.CreateAsync(user);
-
                     await _unitOfWork.SaveChangesAsync();
 
-                    var role = _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Name == nameof(Roles.User));
+                    var role = await _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Name == nameof(Roles.User));
                     if (role == null)
                     {
                         return new BaseResult<UserDto>()
@@ -151,7 +150,6 @@ namespace RecipeBook.Application.Services
                         RoleId = role.Id
                     };
                     await _unitOfWork.UserRoles.CreateAsync(userRole);
-
                     await _unitOfWork.SaveChangesAsync();
 
                     await transaction.CommitAsync();
@@ -160,13 +158,11 @@ namespace RecipeBook.Application.Services
                 {
                     await transaction.RollbackAsync();
                 }
-
-                return new BaseResult<UserDto>()
-                {
-                    Data = _mapper.Map<UserDto>(user)
-                };
-
             }
+            return new BaseResult<UserDto>()
+            {
+                Data = _mapper.Map<UserDto>(user)
+            };
         }
 
             private string HashPassword(string password)

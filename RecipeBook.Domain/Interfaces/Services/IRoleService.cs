@@ -1,4 +1,5 @@
 ﻿using RecipeBook.Domain.Dto.Role;
+using RecipeBook.Domain.Dto.UserRole;
 using RecipeBook.Domain.Entity;
 using RecipeBook.Domain.Result;
 
@@ -42,13 +43,13 @@ namespace RecipeBook.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(UserRoleDto dto);
+        Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(DeleteUserRoleDto dto);
 
         /// <summary>
-        /// Обновление роли для пользователя
+        /// Обновление роли y пользователя
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UserRoleDto dto);
+        Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UpdateUserRoleDto dto);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Domain.Dto.Role;
+using RecipeBook.Domain.Dto.UserRole;
 using RecipeBook.Domain.Entity;
 using RecipeBook.Domain.Enum;
+using RecipeBook.Domain.Interfaces.Databases;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Result;
 
@@ -14,13 +16,15 @@ namespace RecipeBook.Application.Services
         private readonly IBaseRepository<Role> _roleRepository;
         private readonly IBaseRepository<UserRole> _userRoleRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RoleService(IBaseRepository<User> userRepository, IBaseRepository<Role> roleRepository, IMapper mapper, IBaseRepository<UserRole> userRoleRepository)
+        public RoleService(IBaseRepository<User> userRepository, IBaseRepository<Role> roleRepository, IMapper mapper, IBaseRepository<UserRole> userRoleRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
             _userRoleRepository = userRoleRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<BaseResult<RoleDto>> CreateRoleAsync(CreateRoleDto dto)
         {
@@ -85,8 +89,7 @@ namespace RecipeBook.Application.Services
             };
         }
 
-        //можно 2 и более ролей добавлять для одного и того же пользователя (надо бы исправить позже обязательно!!!)
-        public async Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto) 
+        public async Task<BaseResult<UserRoleDto>> AddRoleForUserAsync(UserRoleDto dto)
         {
             var user = await _userRepository.GetAll()
                 .Include(u => u.Roles)
@@ -137,7 +140,7 @@ namespace RecipeBook.Application.Services
             };
         }
 
-        public async Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(UserRoleDto dto)
+        public async Task<BaseResult<UserRoleDto>> DeleteRoleForUserAsync(DeleteUserRoleDto dto)
         {
             var user = await _userRepository.GetAll()
                 .Include(u => u.Roles)
@@ -151,7 +154,7 @@ namespace RecipeBook.Application.Services
                 };
             }
 
-            var role = user.Roles.FirstOrDefault(r => r.Name == dto.RoleName);
+            var role = user.Roles.FirstOrDefault(r => r.Id == dto.RoleId);
             if (role == null)
             {
                 return new BaseResult<UserRoleDto>
@@ -177,9 +180,74 @@ namespace RecipeBook.Application.Services
             };
         }
 
-        public Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UserRoleDto dto)
+        public async Task<BaseResult<UserRoleDto>> UpdateRoleForUserAsync(UpdateUserRoleDto dto)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetAll()
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.Login == dto.Login);
+            if (user == null)
+            {
+                return new BaseResult<UserRoleDto>
+                {
+                    ErrorMessage = "Пользователь не найден",
+                    ErrorCode = (int)ErrorCodes.UserNotFound,
+                };
+            }
+
+            var role = user.Roles.FirstOrDefault(r => r.Id == dto.FromRoleId);
+            if (role == null)
+            {
+                return new BaseResult<UserRoleDto>
+                {
+                    ErrorMessage = "Роль не найдена",
+                    ErrorCode = (int)ErrorCodes.RoleNotFound,
+                };
+            }
+
+            var newRoleForUser = await _roleRepository.GetAll().FirstOrDefaultAsync(r => r.Id == dto.ToRoleId);
+            if (newRoleForUser == null)
+            {
+                return new BaseResult<UserRoleDto>
+                {
+                    ErrorMessage = "Роль не найдена",
+                    ErrorCode = (int)ErrorCodes.RoleNotFound,
+                };
+            }
+
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    var userRole = await _unitOfWork.UserRoles.GetAll()
+                        .Where(ur => ur.RoleId == role.Id)
+                        .FirstAsync(ur => ur.UserId == user.Id);
+
+                    _unitOfWork.UserRoles.Remove(userRole);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    var newUserRole = new UserRole()
+                    {
+                        UserId = user.Id,
+                        RoleId = newRoleForUser.Id,
+                    };
+                    await _unitOfWork.UserRoles.CreateAsync(newUserRole);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
+            return new BaseResult<UserRoleDto>()
+            {
+                Data = new UserRoleDto()
+                {
+                    Login = user.Login,
+                    RoleName = newRoleForUser.Name
+                }
+            };
         }
     }
 }

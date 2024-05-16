@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Domain.Dto.Role;
+using RecipeBook.Domain.Dto.UserRole;
 using RecipeBook.Domain.Entity;
 using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Services;
@@ -137,7 +138,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         /// <summary>
-        /// Удаление роли пользователя
+        /// Удаление роли у пользователя
         /// </summary>
         /// <param name="dto"></param>
         /// <remarks>
@@ -155,9 +156,39 @@ namespace RecipeBook.Api.Controllers
         [HttpDelete("deleteRole")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<Role>>> DeleteRoleForUser([FromBody] UserRoleDto dto)
+        public async Task<ActionResult<BaseResult<Role>>> DeleteRoleForUser([FromBody] DeleteUserRoleDto dto)
         {
             var response = await _roleService.DeleteRoleForUserAsync(dto);
+            if (response.isSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        /// <summary>
+        /// Обновление роли у пользователя
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <remarks>
+        /// Request to create recipe:
+        ///     
+        ///     PUT
+        ///     {
+        ///         "login": "string",
+        ///         "roleName": "string",
+        ///         "newRoleName": "string",
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Роль была обновлена</response>
+        /// <response code="400">Роль не была обновлена</response>
+        [HttpPut("updateRole")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BaseResult<Role>>> UpdateRoleForUser([FromBody] UpdateUserRoleDto dto)
+        {
+            var response = await _roleService.UpdateRoleForUserAsync(dto);
             if (response.isSuccess)
             {
                 return Ok(response);

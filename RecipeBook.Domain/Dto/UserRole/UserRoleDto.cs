@@ -1,4 +1,4 @@
-﻿namespace RecipeBook.Domain.Dto.Role
+﻿namespace RecipeBook.Domain.Dto.UserRole
 {
     public class UserRoleDto
     {
