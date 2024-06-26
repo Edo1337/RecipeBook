@@ -23,12 +23,15 @@ builder.Services.AddSwagger();
 //Serilog
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
-//Dependency Injection
+//Dependency Injection DAL
 builder.Services.AddDataAccessLayer(builder.Configuration);
+
+//Dependency Injection Application
 builder.Services.AddApplication();
+
+//Dependency Injection RabbitMQ
 builder.Services.AddProducer();
 builder.Services.AddConsumer();
-
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using RecipeBook.Application.Validations;
 using RecipeBook.Domain.Dto.Recipe;
 using RecipeBook.Domain.Entity;
@@ -7,6 +8,8 @@ using RecipeBook.Domain.Enum;
 using RecipeBook.Domain.Interfaces.Services;
 using RecipeBook.Domain.Interfaces.Validations;
 using RecipeBook.Domain.Result;
+using RecipeBook.Domain.Settings;
+using RecipeBook.Producer.Interfaces;
 using Serilog;
 
 namespace RecipeBook.Application.Services
@@ -16,17 +19,22 @@ namespace RecipeBook.Application.Services
         private readonly IBaseRepository<Recipe> _recipeRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IRecipeValidator _recipeValidatior;
+        private readonly IMessageProducer _messageProducer;
+        private readonly IOptions<RabbitMqSettings> _rabbitMqSettings;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public RecipeService(IBaseRepository<Recipe> recipeRepository, IBaseRepository<User> userRepository,
-            IRecipeValidator recipeValidator, IMapper mapper, ILogger logger)
+            IRecipeValidator recipeValidator, IMessageProducer messageProducer, IMapper mapper, ILogger logger,
+            IOptions<RabbitMqSettings> rabbitMqSettings)
         {
             _recipeRepository = recipeRepository;
             _userRepository = userRepository;
             _recipeValidatior = recipeValidator;
+            _messageProducer = messageProducer;
             _mapper = mapper;
             _logger = logger;
+            _rabbitMqSettings = rabbitMqSettings;
         }
 
         /// <inheritdoc />
@@ -125,6 +133,10 @@ namespace RecipeBook.Application.Services
                 UserId = user.Id,
             };
             await _recipeRepository.CreateAsync(recipe);
+            await _recipeRepository.SaveChangesAsync();
+
+            _messageProducer.SendMessage(recipe, _rabbitMqSettings.Value.RoutingKey, _rabbitMqSettings.Value.ExchangeName);
+
             return new BaseResult<RecipeDto>()
             {
                 //Ручной mapping:

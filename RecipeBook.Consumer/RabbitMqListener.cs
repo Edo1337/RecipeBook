@@ -20,7 +20,7 @@ namespace RecipeBook.Consumer
             var factory = new ConnectionFactory() { HostName = "localhost" };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(_options.Value.QueueName, durable: true, exclusive: true, autoDelete: false, arguments: null);
+            _channel.QueueDeclare(_options.Value.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
